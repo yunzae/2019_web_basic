@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>assignment2</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <style>
+        *{
+            margin : 5px;
+        }
+        img{
+            float:left;
+            width: 170px;
+        }
+
+
+
+        header,nav,footer{
+            background-color: rgb(17, 86, 95);
+            text-align: left;
+            padding: 15px;
+            color: white;
+            margin:0;
+            overflow: hidden;
+        }
+        header{
+            height: 170px;
+        
+        }
+
+        footer{
+            background-color: lightgray;
+            color:gray;
+            clear :both;
+            text-align: left;
+
+        }
+        nav{
+            background-color: rgb(48, 208, 236);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            
+        }
+        nav a{
+            display: block;
+            float: left;
+            padding: 14px 16px;
+            margin: 0;
+        }
+        section{
+			margin : 10px 5px;
+			border : solid 2px rgb(48, 208, 236); 
+			width : 46%;
+			height : 200px;
+			float : left ;
+        }
+        section:nth-child(even){
+			margin : 10px 5px;
+			border : solid 2px rgb(48, 208, 236); 
+			width : 46%;
+			height : 200px;
+			float : right ;
+        }
+        
+        section h2:first-child{
+            border:15px solid rgb(255, 255, 255);
+            padding: 10px;
+            margin: 2px;
+            background-color: rgb(17, 86, 95);
+        }
+        h2{
+            color: white;
+        }
+
+        
+        li{
+            padding: 2px;
+
+        }
+        p{
+            margin:20px;
+        }
+        a{text-decoration: none;}
+        a:visited{
+            color: blue;
+        }
+        nav a:link, nav a:visited{
+            color: white;
+        }
+        
+        nav a:hover {
+            background-color: white;
+            color:rgb(48, 208, 236);
+        }
+
+
+
+    </style>
+
+</head>
+<body>
+    <header>
+        <img src="pnu.png" >
+        <h1 style="display: inline-block;margin: 30px;">KIM YUNJAE</h1><br>
+        <h3 style="display: inline-block;margin-left: 110px;">김윤재</h3>
+    </header>
+    <nav>
+        <a href="#s1">[개인정보]</a>&nbsp;&nbsp;
+        <a href="#s2">[학력사항]</a>&nbsp;&nbsp;
+        <a href="#s3">[자격사항]</a>&nbsp;&nbsp;
+        <a href="#s4">[자기소개]</a>&nbsp;&nbsp;
+    </nav>
+    <section id="s1">
+        <h2 id="s1h">개인정보</h2>
+        <ul style="list-style-type: none;">
+            <li><span class="material-icons-outlined">
+                phone
+                </span>01025474714</li>
+            <li><span class="material-icons-outlined">
+                email
+                </span>dsa05037@naver.com</li>
+            <li><span class="material-icons-sharp">
+                home
+                </span>부산광역시 금정구 부산대학교64번안길</li>
+        </ul>
+    </section>
+    <section id="s2">
+        <h2 id="s2h">학력사항</h2>
+        <ul>
+            <li><a href="https://www.pusan.ac.kr/kor/Main.do" target="_blank">대학교재학</a></li>
+            <li><a href="http://www.yeungjin.hs.kr/index.do" target='_blank'>고등학교 졸업</a></li>
+            <li><a href="http://www.bokhyun.ms.kr"target="_blank">중학교 졸업</a></li>
+            <li><a href="http://www.tgshinam.es.kr"target="_blank">초등학교 졸업</a></li>
+        </ul>
+        
+    </section>
+    <section id="s3">
+        <h2 id="s3h">자격사항</h2>
+        <ol>
+            <li>스킨스쿠버</li>
+            <li>태권도2품</li>
+            <li>운전면허증</li>
+        </ul>
+    </section> 
+    <section>
+        <h2 id="s4h">자기소개</h2>
+        <p>
+            <a href="./assign_01_201824446_김윤재.html" target="_blank">SWOT 분석</a>
+        <br>안녕하세요 저는 부산대학교 전기컴퓨터공학부 정보컴퓨터공학전공 김윤재입니다.<br><br>
+        </p>
+    </section>    
+    <footer style="height: 90px;">
+        &copf; kimyunjae 부산광역시 금정구 부산대학로64번안길
+    </footer>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>assignment5</title>
+    <style>
+      
+        .box1{
+            width: 400px;
+            height: 30px;
+            padding: 5px;
+            border: 1px solid;
+            box-sizing: border-box;
+            border-radius:10px;
+            text-align: center;
+            background-color: rgb(111, 179, 9);
+            color: white;
+        }
+        .box2{
+            margin-left: 15px;
+            width: 360px;
+            height: 30px;
+            border: 1px solid;
+            padding: 5px;
+            padding-left: 30px;
+            box-sizing: border-box;
+        }
+      
+       
+        
+    </style>
+</head>
+
+<body>
+    <div class="box1">
+        개인 신청 자료
+    </div>
+    <br>
+    <form action="#">
+        <!--성명-->
+        <label for="name1">
+            성명
+        </label>
+        <br>
+                <input type="text" id="name1" name="name1" placeholder="성명입력" style="width: 360px;height: 20px; margin-left: 10px; border: 1px solid;">
+           
+        <br><br>
+        <!--이메일-->
+        <label for="email1" >
+            E-mail
+        </label>
+        <br>
+        <input type="text" id="email1" name="email1" placeholder="Email 입력" style="width: 360px;height: 20px; margin-left: 10px; border: 1px solid;">
+        <br>
+        <br>
+        <!--생년월일-->
+        <label for="birth1">
+            생년월일
+        </label>
+        <br>
+        <input type="text" id="birth1" name="birth1" placeholder="년" style="width: 100px;height: 20px ; margin: 5px; margin-left: 15px; border: 1px solid;">
+        <select id="birth1" name="birth1" style="width: 110px;height: 20px; margin: 5px; border: 1px solid;">
+            <option value="1월">
+                1월
+            </option>
+            <option value="2월">
+                2월
+            </option>
+            <option value="3월">
+                3월
+            </option>
+            <option value="4월">
+                4월
+            </option>
+            <option value="5월">
+                5월
+            </option>
+            <option value="6월">
+                6월
+            </option>
+            <option value="7월">
+                7월
+            </option>
+            <option value="8월">
+                8월
+            </option>
+            <option value="9월">
+                9월
+            </option>
+            <option value="10월">
+                10월
+            </option>
+            <option value="11월"> 
+                11월
+            </option>
+            <option value="12월">
+                12월
+            </option>
+        <input type="text" id="birth1" name="birth1" placeholder="일" style="width: 110px;height: 20px; margin: 5px; border: 1px solid;">
+        <br>
+        <br>
+        <!--성별-->
+        <label for="sex">
+            성별
+        </label>
+        <br>
+        <div class="box2">
+            <input type="radio" id="남" name="sex">
+            <label for="male">
+                남
+            </label>
+            <input type="radio" id="여" name="sex">
+            <label for="female">
+                여
+            </label>
+        </div>
+        <br><br>
+        <!--관심분야-->
+        <label for="preper">
+            관심분야
+        </label>
+        <br>
+        <div class="box2">
+            <label for="preper1">
+                C
+            </label>
+            <input type="checkbox" id="preper1" name="preper1">
+            <label for="preper2">
+                파이썬
+            </label>
+            <input type="checkbox" id="preper2" name="preper2">
+            <label for="preper3">
+                R
+            </label>
+            <input type="checkbox" id="preper3" name="preper3">
+            <label for="preper4">
+                Javascript
+            </label>
+            <input type="checkbox" id="preper4" name="preper4" checked>
+        </div>
+        <br>
+        <!--기타-->
+        <label for="etc" >
+            기타
+        </label>
+        <br>
+        <textarea id="etc" name="etc" rows="4" cols="43" style="margin-left: 10px; border: 1px solid;"></textarea>
+        <br>
+        <!--확인 취소-->
+            <input type="submit" value="확인" 
+            style="
+            width: 170px;
+            height: 30px;
+            box-sizing: border-box;
+            text-align: center;
+            background-color: rgb(111, 179, 9);
+            color: white;">
+
+            <input type="reset" value="취소" 
+            style="
+            width: 170px;
+            height: 30px;
+            box-sizing: border-box;
+            text-align: center;
+            background-color: rgb(111, 179, 9);
+            color: white;">
+    </form>
+</body>
+</html>
