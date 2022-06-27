@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ko">
+<!--
+    최소개발기준 1.open api 2개 이상 활용 : 연극정보,카카오맵 (충족)
+                2.서로 다른 HTML element 15개 이상 (충족)
+                3.서로 다른 css selector로 15개 이상 스타일 사용 (충족)
+                4.JavaScript를 활용해 부적절한 입력 및 OPEN API의 response 중 에러에 대한 처리 (충족)
+                5.수업 시간에 배운 jQuery/AJAX/JSON 기능 활용 (충족)
+                6.Node.js를 활용한 local webserver를 사옹하는 경우, web server의 기능은 routing과 API server로부터 받은 data를 forwarding하는 역할만 구현 할 것(충족)
+
+-->
+
+
+
+<head><!--HTML-->
+    <meta charset="UTF-8">
+    <title>부산연극조회</title>  <!--HTML-->
+    
+    <style> /*HTML*/
+        /*css*/
+        .box1{
+            text-align : center;
+            color: white;
+            height: 0px;
+        }
+        /*css*/
+        h1{
+            font-size: 30px;
+        }
+
+        /*css*/
+        .box3,.box4,.box5,.box6 {
+        box-sizing: border-box;
+		border-radius: 0px;
+		border: 1px solid white;
+		margin : 10px;
+		width: 48%;
+		height: 300px; 
+		color : rgb(3, 3, 3);
+		text-align : center;
+        overflow:auto;
+        background-color: rgb(173, 171, 171);
+        -ms-overflow-style: none;
+       
+        }
+        /*css*/
+        .box3{
+            float: left;
+            margin-right: auto;
+        }
+        /*css*/
+        .box4{
+            float: right;
+            margin-left: auto;
+        }
+        /*css*/
+        .box5{
+            height: 400px; 
+            float: left;
+            margin-right: auto;
+        }
+        /*css*/
+        .box6{
+            height: 400px; 
+            float: right;
+            margin-left: auto; 
+        }
+        /*css*/
+        form{
+            background-color: rgb(173, 171, 171);
+        }
+        /*css*/
+        html{
+            background-color: rgb(173, 171, 171);
+            
+        }
+        /*css*/
+        ::-webkit-scrollbar{
+            display:none;
+        }
+        /*css*/
+        a{
+            text-decoration-line: none;
+            color:white;
+            display: block;
+            font-size: 20px;
+            
+        }
+        /*css*/
+        a:nth-child(odd){
+            padding:20px;
+        }
+        /*css*/
+        .box3 a{
+            padding: 20px;
+            font:bold;
+        }
+        /*css*/
+        a:hover{
+            color: rgb(173, 171, 171);
+            background-color: white;
+            
+        }
+        /*css*/
+        footer{
+            clear:both;
+            color:white;
+        }
+        /*css*/
+        p{
+            font:bold;
+
+        }
+        /*css*/
+        header{
+            color: white;
+            display: block;
+            margin: 0px;
+        }
+    </style>
+    
+
+</head>
+<body><!--HTML-->
+    <script
+    src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+
+    
+    
+    
+    
+    <script> //html
+        var theater = new Array();
+        var theaterlocate = new Array();
+        var num = new Array();
+        var title = new Array();
+        var end = new Array();
+        var start = new Array();
+        var place = new Array();
+        var item = new Array();
+        var title_final = new Array();
+        var theater_no = new Array();
+
+
+        
+        function TheaterList(locate) {
+            var xhr = new XMLHttpRequest(); //ajax
+            xhr.withCredentials = true;
+            xhr.addEventListener("readystatechange", function() {
+                
+                    if(this.readyState === 4) {
+                    var theater_temp = this.responseText.split("<place_nm>");  
+                    for(i=1; i < theater_temp.length; i++){
+                        var theater_each = theater_temp[i].split("</place_nm>");
+                        
+                        var theater_array = "<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + theater_each[0] + "<a><br>"
+                        theater.push(theater_array); 
+                        
+                    }
+
+                    for (i=0; i<theater.length;i++){
+                        if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "BNK부산은행 조은극장" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.098344270211065 ,129.03232793032424);list(1);' >" + "BNK부산은행 조은극장" + "<a>"
+                                theaterlocate[i] = 15;
+                                theater_no[i] = 1;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "부산문화회관" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.12801091513817, 129.0936902312712);list(2);' >" + "부산문화회관" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 2;
+
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "부산시민회관" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.138965226064066, 129.0652871846442);list(3);' >" + "부산시민회관" + "<a>"
+                                theaterlocate[i] = 5;
+                                theater_no[i] = 3;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "해운대문화회관" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.17135553199018, 129.17398881162623);list(4);' >" + "해운대문화회관" + "<a>"
+                                theaterlocate[i] = 16;
+                                theater_no[i] = 4;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "에저또소극장 [부산]" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.138339059073814, 129.09732689998978);list(5);' >" + "에저또소극장 [부산]" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 5;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "바보소극장" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.13423673676631, 129.10054613860686);list(6);' >" + "바보소극장" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 6;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "초콜릿팩토리" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.13946466189118, 129.0994481227313);list(7);' >" + "초콜릿팩토리" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 7;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "해바라기소극장 [부산]" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.13696607825469, 129.1022627692985);list(8);' >" + "해바라기소극장 [부산]" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 8;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "용천지랄소극장" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.1369256185394, 129.10255241162557);list(9);' >" + "용천지랄소극장" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 9;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "레몬트리소극장" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.14390426871732, 129.10898342697138);list(10);' >" + "레몬트리소극장" + "<a>"
+                                theaterlocate[i] = 12;
+                                theater_no[i] = 10;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "청춘나비아트홀 (청춘나비아트홀)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.16445334714149, 129.11438227300889);list(11);' >" + "청춘나비아트홀 (청춘나비아트홀)" + "<a>"
+                                theaterlocate[i] = 12;
+                                theater_no[i] = 11;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "KNN씨어터" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.17183994076624, 129.12868435395333);list(12);' >" + "KNN씨어터" + "<a>"
+                                theaterlocate[i] = 16;
+                                theater_no[i] = 12;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "KNN씨어터 (KNN씨어터)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.17183994076624, 129.12868435395333);list(13);' >" + "KNN씨어터 (KNN씨어터)" + "<a>"
+                                theaterlocate[i] = 16;
+                                theater_no[i] = 13;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "한결아트홀 (한결아트홀)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.18847136774605, 129.07618021348156);list(14);' >" + "한결아트홀 (한결아트홀)" + "<a>"
+                                theaterlocate[i] = 13;
+                                theater_no[i] = 14;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "BNK부산은행 조은극장 (스타홀)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.0984144939596, 129.03234670580696);list(15);' >" + "BNK부산은행 조은극장 (스타홀)" + "<a>"
+                                theaterlocate[i] = 15;
+                                theater_no[i] = 15;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "부산민주공원 공연장 (작은방(소극장))" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.1102297609521, 129.02807269813437);list(16);' >" + "부산민주공원 공연장 (작은방(소극장))" + "<a>"
+                                theaterlocate[i] = 15;
+                                theater_no[i] = 16;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "에저또소극장 [부산] (에저또소극장 [부산])" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.138356606399995, 129.09711232326129);list(17);' >" + "에저또소극장 [부산] (에저또소극장 [부산])" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 17;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "바보소극장 (바보소극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.13423673676631, 129.10054613860686);list(18);' >" + "바보소극장 (바보소극장)" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 18;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "하늘바람소극장 (하늘바람소극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.19642522399739, 129.07053488464524);list(19);' >" + "하늘바람소극장 (하늘바람소극장)" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 19;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "소극장 6번출구 (소극장 6번출구)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.14867306868433, 129.11051038649927);list(20);' >" + "소극장 6번출구 (소극장 6번출구)" + "<a>"
+                                theaterlocate[i] = 12;
+                                theater_no[i] = 20;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "레몬트리소극장 (레몬트리소극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.14390426871732, 129.10898342697138);list(21);' >" + "레몬트리소극장 (레몬트리소극장)" + "<a>"
+                                theaterlocate[i] = 12;
+                                theater_no[i] = 21;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "동래문화회관 (대극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.213422152981444, 129.0904152969073);list(22);' >" + "동래문화회관 (대극장)" + "<a>"
+                                theaterlocate[i] = 6;
+                                theater_no[i] = 22;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "가온아트홀 [부산] (2관)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.12782377720627, 129.09282525580747);list(23);' >" + "가온아트홀 [부산] (2관)" + "<a>"
+                                theaterlocate[i] = 5;
+                                theater_no[i] = 23;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "초콜릿팩토리 (초콜릿팩토리)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.13946466189118, 129.0994481227313);list(24);' >" + "초콜릿팩토리 (초콜릿팩토리)" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 24;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "효로민락소극장 (효로민락소극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.1671070917597, 129.1226214692989);list(25);' >" + "효로민락소극장 (효로민락소극장)" + "<a>"
+                                theaterlocate[i] = 12;
+                                theater_no[i] = 25;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "부산광역시학생문화예술회관 (대극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.19929355518908, 129.00188415580888);list(26);' >" + "부산광역시학생문화예술회관 (대극장)" + "<a>"
+                                theaterlocate[i] = 8;
+                                theater_no[i] = 26;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "액터스소극장 (액터스소극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.14319837016323, 129.1098489134805);list(27);' >" + "액터스소극장 (액터스소극장)" + "<a>"
+                                theaterlocate[i] = 12;
+                                theater_no[i] = 27;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "부산문화회관 (중극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.12801091513817, 129.0936902312712);list(28);' >" + "부산문화회관 (중극장)" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 28;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "부산시민회관 (소극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.138965226064066, 129.0652871846442);list(29);' >" + "부산시민회관 (소극장)" + "<a>"
+                                theaterlocate[i] = 5;
+                                theater_no[i] = 29;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "NC소극장 [부산대] (NC소극장 [부산대])" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.23242923308713, 129.0842767846459);list(30);' >" + "NC소극장 [부산대] (NC소극장 [부산대])" + "<a>"
+                                theaterlocate[i] = 2;
+                                theater_no[i] = 30;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "BNK부산은행 조은극장 (1관)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.098344270211065 ,129.03232793032424);list(31);' >" + "BNK부산은행 조은극장 (1관)" + "<a>"
+                                theaterlocate[i] = 15;
+                                theater_no[i] = 31;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "부산북구문화빙상센터 (공연장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.21362546355412, 129.0058783711549);list(32);' >" + "부산북구문화빙상센터 (공연장)" + "<a>"
+                                theaterlocate[i] = 8;
+                                theater_no[i] = 32;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "부산메트로홀 (구. AN아트홀 광안) (부산메트로홀 (구. AN아트홀 광안))" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.15721381309939, 129.11307689999015);list(33);' >" + "부산메트로홀 (구. AN아트홀 광안) (부산메트로홀 (구. AN아트홀 광안))" + "<a>"
+                                theaterlocate[i] = 12;
+                                theater_no[i] = 33;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "가온아트홀 [부산] (1관)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.12782377720627, 129.09282525580747);list(34);' >" + "가온아트홀 [부산] (1관)" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 34;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "레몬트리소극장 (레몬트리소극장), 가온아트홀 [부산] (1관)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.14390426871732, 129.10898342697138);list(35);' >" + "레몬트리소극장 (레몬트리소극장), 가온아트홀 [부산] (1관)" + "<a>"
+                                theaterlocate[i] = 12;
+                                theater_no[i] = 35;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "해운대문화회관 (고운홀)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.17135553199018, 129.17398881162623);list(36);' >" + "해운대문화회관 (고운홀)" + "<a>"
+                                theaterlocate[i] = 16;
+                                theater_no[i] = 36;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "나다소극장 (나다소극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.13659830529344, 129.10081176929845);list(37);' >" + "나다소극장 (나다소극장)" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 37;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "가온아트홀 [부산] (2관), 가온아트홀 [부산] (1관)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.12782377720627, 129.09282525580747);list(38);' >" + "가온아트홀 [부산] (2관), 가온아트홀 [부산] (1관)" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 38;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "(재)영화의전당 (하늘연극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.17147596396946, 129.12722778464473);list(39);' >" + "(재)영화의전당 (하늘연극장)" + "<a>"
+                                theaterlocate[i] = 16;
+                                theater_no[i] = 39;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "성원아트홀 (성원아트홀)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.081188836588595, 128.90335431347933);list(40);' >" + "성원아트홀 (성원아트홀)" + "<a>"
+                                theaterlocate[i] = 1;
+                                theater_no[i] = 40;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "해운대문화회관 (해운홀)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.17135553199018, 129.17398881162623);list(41);' >" + "해운대문화회관 (해운홀)" + "<a>"
+                                theaterlocate[i] = 16;
+                                theater_no[i] = 41;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "드림씨어터 [부산] (드림씨어터)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.14857124142476, 129.06544261348085);list(42);' >" + "드림씨어터 [부산] (드림씨어터)" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 42;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "동래문화회관 (소극장), 동래문화회관 (대극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.21225498573237, 129.0903532116272);list(43);' >" + "동래문화회관 (소극장), 동래문화회관 (대극장)" + "<a>"
+                                theaterlocate[i] = 6;
+                                theater_no[i] = 43;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "BNK부산은행 조은극장 (2관), BNK부산은행 조은극장 (1관)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.098344270211065 ,129.03232793032424);list(44);' >" + "BNK부산은행 조은극장 (2관), BNK부산은행 조은극장 (1관)" + "<a>"
+                                theaterlocate[i] = 15;
+                                theater_no[i] = 44;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "국립부산국악원 (연악당)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.17152582243829, 129.05425675395347);list(45);' >" + "국립부산국악원 (연악당)" + "<a>"
+                                theaterlocate[i] = 7;
+                                theater_no[i] = 45;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "금정문화회관 (소공연장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.24613599342183, 129.0945356711554);list(46);' >" + "금정문화회관 (소공연장)" + "<a>"
+                                theaterlocate[i] = 2;
+                                theater_no[i] = 46;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "무대공감 소극장 (무대공감 소극장 at 젬스톤)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.09467904243225, 129.04488882882532);list(47);' >" + "무대공감 소극장 (무대공감 소극장 at 젬스톤)" + "<a>"
+                                theaterlocate[i] = 14;
+                                theater_no[i] = 47;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "BNK부산은행 조은극장 (2관)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.098344270211065 ,129.03232793032424);list(48);' >" + "BNK부산은행 조은극장 (2관)" + "<a>"
+                                theaterlocate[i] = 15;
+                                theater_no[i] = 48;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "창조문화활력센터 소극장 624 (창조문화활력센터 소극장 624)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.20664003906805, 129.0045195269725);list(49);' >" + "창조문화활력센터 소극장 624 (창조문화활력센터 소극장 624)" + "<a>"
+                                theaterlocate[i] = 8;
+                                theater_no[i] = 49;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "소향씨어터 (신한카드홀)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.17290911962786, 129.12762523860766);list(50);' >" + "소향씨어터 (신한카드홀)" + "<a>"
+                                theaterlocate[i] = 16;
+                                theater_no[i] = 50;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "국립부산국악원 (예지당)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.171464431814, 129.0543533134813);list(51);' >" + "국립부산국악원 (예지당)" + "<a>"
+                                theaterlocate[i] = 7;
+                                theater_no[i] = 51;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "부산예술회관 (부산예술회관)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.13087001887513, 129.10252795580752);list(52);' >" + "부산예술회관 (부산예술회관)" + "<a>"
+                                theaterlocate[i] = 8;
+                                theater_no[i] = 52;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "경성대학교 예노소극장 (경성대학교 예노소극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.13988563587321, 129.098550242317);list(53);' >" + "경성대학교 예노소극장 (경성대학교 예노소극장)" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 53;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "부산 축제소극장 (부산 축제소극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.13649197942975, 129.1012357539527);list(54);' >" + "부산 축제소극장 (부산 축제소극장)" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 54;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "일터 소극장 (일터 소극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.13864232140729, 129.06559382697122);list(55);' >" + "일터 소극장 (일터 소극장)" + "<a>"
+                                theaterlocate[i] = 5;
+                                theater_no[i] = 55;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "AN아트홀 [서면] (AN아트홀 [서면])" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.15438187530187, 129.06123958278943);list(56);' >" + "AN아트홀 [서면] (AN아트홀 [서면])" + "<a>"
+                                theaterlocate[i] = 7;
+                                theater_no[i] = 56;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "용천지랄소극장 (용천지랄소극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.1369256185394, 129.10255241162557);list(57);' >" + "용천지랄소극장 (용천지랄소극장)" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 57;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "KBS홀 [부산] (KBS홀 [부산])" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.145330657516894, 129.1090990558079);list(58);' >" + "KBS홀 [부산] (KBS홀 [부산])" + "<a>"
+                                theaterlocate[i] = 12;
+                                theater_no[i] = 58;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "가마골소극장 (가마골소극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.26772789528033, 129.234837967446);list(59);' >" + "가마골소극장 (가마골소극장)" + "<a>"
+                                theaterlocate[i] = 3;
+                                theater_no[i] = 59;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "안데르센극장 (안데르센극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.36072552412903, 129.23982844232154);list(60);' >" + "안데르센극장 (안데르센극장)" + "<a>"
+                                theaterlocate[i] = 3;
+                                theater_no[i] = 60;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "부산문화회관 (사랑채극장(소극장))" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.12801091513817, 129.0936902312712);list(61);' >" + "부산문화회관 (사랑채극장(소극장))" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 61;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "공간소극장 (공간소극장)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.134364747198504, 129.0896756692984);list(62);' >" + "공간소극장 (공간소극장)" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 62;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "소향씨어터" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.17290911962786, 129.12762523860766);list(63);' >" + "소향씨어터" + "<a>"
+                                theaterlocate[i] = 16;
+                                theater_no[i] = 63;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "액터스소극장" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.14319837016323, 129.1098489134805);list(64);' >" + "액터스소극장" + "<a>"
+                                theaterlocate[i] = 12;
+                                theater_no[i] = 64;
+                        }
+                        else  if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "동래문화회관" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.21225498573237, 129.0903532116272);list(65);' >" + "동래문화회관" + "<a>"
+                                theaterlocate[i] = 6;
+                                theater_no[i] = 65;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "부산메트로홀 (구. AN아트홀 광안)" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.15721381309939, 129.11307689999015);list(66);' >" + "부산메트로홀 (구. AN아트홀 광안)" + "<a>"
+                                theaterlocate[i] = 12;
+                                theater_no[i] = 66;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "효로민락소극장" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.1671070917597, 129.1226214692989);list(67);' >" + "효로민락소극장" + "<a>"
+                                theaterlocate[i] = 12;
+                                theater_no[i] = 67;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "가온아트홀 [부산]" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.12782377720627, 129.09282525580747);list(68);' >" + "가온아트홀 [부산]" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 68;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "나다소극장" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.13659830529344, 129.10081176929845);list(69);' >" + "나다소극장" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 69;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "초록마술극장" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.24204334259824, 129.0957434711554);list(70);' >" + "초록마술극장" + "<a>"
+                                theaterlocate[i] = 2;
+                                theater_no[i] = 70;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "소극장 6번출구" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.14867306868433, 129.11051038649927);list(71);' >" + "소극장 6번출구" + "<a>"
+                                theaterlocate[i] = 12;
+                                theater_no[i] = 71;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "공간소극장" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.134364747198504, 129.0896756692984);list(72);' >" + "공간소극장" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 72;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "YAMAN" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.15718158081933, 129.06060081687022);list(73);' >" + "YAMAN" + "<a>"
+                                theaterlocate[i] = 7;
+                                theater_no[i] = 73;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "여기는 극장입니다" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.18481198488615, 129.07918710977137);list(74);' >" + "여기는 극장입니다" + "<a>"
+                                theaterlocate[i] = 13;
+                                theater_no[i] = 74;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "청년아트스테이션" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.234799414659925, 129.00760229964823);list(75);' >" + "청년아트스테이션" + "<a>"
+                                theaterlocate[i] = 8;
+                                theater_no[i] = 75;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "북구문화예술회관" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.199784693318236, 129.0018839851336);list(76);' >" + "북구문화예술회관" + "<a>"
+                                theaterlocate[i] = 8;
+                                theater_no[i] = 76;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "하늘바람소극장" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.19702730301513, 129.070455792737);list(77);' >" + "하늘바람소극장" + "<a>"
+                                theaterlocate[i] = 4;
+                                theater_no[i] = 77;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "(재)영화의전당" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.17147596396946, 129.12722778464473);list(78);' >" + "(재)영화의전당" + "<a>"
+                                theaterlocate[i] = 16;
+                                theater_no[i] = 78;
+                        }
+                        else if(theater[i]=="<a href='javascript:void(0);' onclick='kakaomap(x, y);' >" + "일터 소극장" + "<a><br>"){
+                            theater[i] = "<a href='javascript:void(0);' onclick='kakaomap(35.13864232140729, 129.06559382697122);list(79);' >" + "일터 소극장" + "<a>"
+                                theaterlocate[i] = 5;
+                                theater_no[i] = 79;
+                        }
+                        else{
+
+                        }
+                    }
+
+                    
+
+                        for (i=0;i< theater.length;i++){
+                                for(j=i+1;j<theater.length;j++){
+                                    if (theater[i] == theater[j]){
+                                        delete theater[j]; 
+                                    }
+                                }
+                            }
+                        for(i=0;i<theater.length;i++){
+                            if(locate == 0){
+                                i = theater.length;
+                            }
+                            if (theaterlocate[i] != locate) {
+                                delete theater[i];
+                            }
+                        }
+                    document.getElementById("theater_list").innerHTML = theater.join("");
+                    
+                    
+                    }
+                
+
+                
+
+            });
+
+
+
+            xhr.open("GET", "http://localhost:3000/webapi");
+            xhr.send();
+
+        }
+
+
+
+        function list(where) {    
+            var xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+            xhr.addEventListener("readystatechange", function() {
+                if(this.readyState === 4) {
+                    item = this.responseText.split("</item>");
+                    for(i=0;i<item.length;i++){
+                        var num_temp = item[i].split("</res_no>");
+                        var num_each = num_temp[0].split("<res_no>");
+                        var num_array = num_each[1];
+                        num.push(num_array);     
+                    }
+                    for(i=0;i<item.length;i++){
+                        
+                        var title_temp = item[i].split("</title>");
+                        var title_each = title_temp[0].split("<title>");
+                        var title_array = title_each[1];
+                        title.push(title_array);
+                            
+                        var end_temp = item[i].split("</op_ed_dt>");
+                        var end_each = end_temp[0].split("<op_ed_dt>");
+                        var end_array = end_each[1];
+                        end.push(end_array);
+                        
+                        var start_temp = item[i].split("</op_st_dt>");
+                        var start_each = start_temp[0].split("<op_st_dt>");
+                        var start_array = start_each[1];
+                        start.push(start_array);
+                        
+                        var place_temp = item[i].split("</place_nm>");
+                        var place_each = place_temp[0].split("<place_nm>");
+                        var place_array = place_each[1] ;
+                        place.push(place_array);  
+                        title_final[i] = "<a href = 'http://busandabom.net/play/view.nm?lang=ko&amp;url=play&amp;menuCd=5&amp;res_no=" + num[i] + "'>" + title[i] +"<br>"+ "(" + start[i] + "~" + end[i] + ")" + "<a>";   
+                    }
+
+                    if (where != 1000000) {
+                        for(i=0;i<title_final.length;i++){
+                            
+                            if(theater_no[i] != where){
+                                delete title_final[i];
+                            }
+
+                        }
+                                                
+                    }
+
+
+
+
+
+
+
+                    document.getElementById("play_list").innerHTML = title_final.join("");
+
+
+
+
+
+                }
+            
+            });
+            xhr.open("GET", "http://localhost:3000/webapi");
+            xhr.send();
+        }
+
+
+        
+    </script>
+
+
+     
+
+<form><!--HTML-->
+    <br><br><!--HTML-->
+    <div class="box1" ><!--HTML-->
+        <h1>부산 연극 조회</h1><!--HTML-->
+    </div>
+    <br><br>
+    <hr><!--HTML-->
+
+    <div class="box3">
+        <header><h2>지역<hr></h2></header><!--HTML-->
+            <a href='javascript:void(0);' onclick='TheaterList(0);kakaomap(35.179793538425486, 129.0751437865);list(1000000);'>전체</a><!--HTML-->
+            <a href='javascript:void(0);' onclick='TheaterList(1);kakaomap(35.21226574307505, 128.980712515337);choose();'>강서구</a>
+            <a href='javascript:void(0);' onclick='TheaterList(2);kakaomap(35.2429477288742, 129.09213098279125);choose();'>금정구</a>
+            <a href='javascript:void(0);' onclick='TheaterList(3);kakaomap(35.24467915344843, 129.22227415580974);choose();'>기장군</a>
+            <a href='javascript:void(0);' onclick='TheaterList(4);kakaomap(35.13671868153946, 129.08441846377417);choose();'>남구</a>
+            <a href='javascript:void(0);' onclick='TheaterList(5);kakaomap(35.12956334296594, 129.0454436539525);choose();'>동구</a>
+            <a href='javascript:void(0);' onclick='TheaterList(6);kakaomap(35.19664139106034, 129.093097298136);choose();'>동래구</a>
+            <a href='javascript:void(0);' onclick='TheaterList(7);kakaomap(35.16336685476347, 129.05301519813526);choose();'>부산진구</a>
+            <a href='javascript:void(0);' onclick='TheaterList(8);kakaomap(35.19740458982462, 128.99023425395393);choose();'>북구</a>
+            <a href='javascript:void(0);' onclick='TheaterList(9);kakaomap(35.15267208518099, 128.9911576116259);choose();'>사상구</a>
+            <a href='javascript:void(0);' onclick='TheaterList(10);kakaomap(35.10449911919878, 128.97477511329603);choose();'>사하구</a>
+            <a href='javascript:void(0);' onclick='TheaterList(11);kakaomap(35.097959492400705, 129.02419336929762);choose();'>서구</a>
+            <a href='javascript:void(0);' onclick='TheaterList(12);kakaomap(35.14555050744034, 129.11317304046213);choose();'>수영구</a>
+            <a href='javascript:void(0);' onclick='TheaterList(13);kakaomap(35.176300606494834, 129.07953400977132);choose();'>연제구</a>
+            <a href='javascript:void(0);' onclick='TheaterList(14);kakaomap(35.09137047624891, 129.068023444171);choose();'>영도구</a>
+            <a href='javascript:void(0);' onclick='TheaterList(15);kakaomap(35.10614578033619, 129.032363455807);choose();'>중구</a>
+            <a href='javascript:void(0);' onclick='TheaterList(16);kakaomap(35.16321580210611, 129.1636255477783);choose();'>해운대구</a>
+
+
+
+    </div>
+
+    <div class="box4">
+        <header><!--HTML-->
+            <h2>극장<hr></h2><!--HTML-->
+        </header>
+        <p id="theater_list" ><!--HTML-->
+            
+        </p>
+    </div>
+
+    <div class="box5">
+        <header><h2>연극<hr></h2></header>
+        <p id="play_list">
+            
+        </p>
+
+    </div>
+
+    <div class="box6" id="map"></div>
+
+
+
+</form>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=47392ff7a8a20050220f510b9a46e65e"></script>
+    <script>
+           var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+                mapOption = { 
+                    center: new kakao.maps.LatLng(35.23099774517053, 129.08232580812265), // 지도의 중심좌표
+                    level: 3 // 지도의 확대 레벨
+                };
+
+            var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+            // 마커가 표시될 위치입니다 
+            var markerPosition  = new kakao.maps.LatLng(35.23099774517053, 129.08232580812265); 
+
+            // 마커를 생성합니다
+            var marker = new kakao.maps.Marker({
+                position: markerPosition
+            });
+
+            // 마커가 지도 위에 표시되도록 설정합니다
+            marker.setMap(map);
+
+            // 아래 코드는 지도 위의 마커를 제거하는 코드입니다
+            // marker.setMap(null);
+
+
+
+
+
+
+
+
+        function kakaomap(x,y){
+            var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+                mapOption = { 
+                    center: new kakao.maps.LatLng(x, y), // 지도의 중심좌표
+                    level: 4 // 지도의 확대 레벨
+                };
+
+            var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+            // 마커가 표시될 위치입니다 
+            var markerPosition  = new kakao.maps.LatLng(x, y); 
+
+            // 마커를 생성합니다
+            var marker = new kakao.maps.Marker({
+                position: markerPosition
+            });
+
+            // 마커가 지도 위에 표시되도록 설정합니다
+            marker.setMap(map);
+
+            // 아래 코드는 지도 위의 마커를 제거하는 코드입니다
+            // marker.setMap(null);
+
+        
+
+        }
+        TheaterList(0);
+        list(1000000);
+        function choose(){
+            document.getElementById("play_list").innerHTML = "<a>극장을 선택해주세요<a>";
+        }
+        
+
+        //jquery
+        $(document).ready(function(){
+            $("h2").on({
+                mouseenter:function(){
+                    $(this).css("color","black");
+                },
+                mouseleave:function(){
+                    $(this).css("color","white");
+                }
+                
+            
+            })
+        })
+
+
+
+
+
+</script>
+
+    <footer><!--HTML-->
+        <hr><p>전기컴퓨터공학부 정보컴퓨터공학전공 201824446 김윤재</p>
+    </footer>
+
+</body>
+</html>
